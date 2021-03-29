@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use crate::db_types::*;
 
 #[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
@@ -37,7 +36,7 @@ impl Table {
 
 #[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Schema {
-    composites: HashSet<Composite>,
+    composites: Vec<Composite>,
     tables: Vec<Table>
 }
 
@@ -46,7 +45,7 @@ impl Schema {
         Self::default()
     }
 
-    pub fn add_table(&mut self, table: Table, composites: HashSet<Composite>) {
+    pub fn add_table(&mut self, table: Table, composites: Vec<Composite>) {
         self.composites.extend(composites);
         self.tables.push(table);
     }

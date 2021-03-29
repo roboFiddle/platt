@@ -5,7 +5,7 @@ use syn::{parse_macro_input, DeriveInput};
 
 pub fn inner(model: TokenStream) -> TokenStream {
     let model = parse_macro_input!(model as DeriveInput);
-    let mut req_composites = quote! { let mut composites = ::std::collections::HashSet::new();  };
+    let mut req_composites = quote! { let mut composites = ::std::vec::Vec::new();  };
 
     if model.generics.lt_token.is_some() {
         panic!("Platt does not support models with generics. Perhaps use an enum instead.")
@@ -40,7 +40,7 @@ pub fn inner(model: TokenStream) -> TokenStream {
                     req_composites.extend(quote! {
                         {
                             #composite
-                            composites.insert(composite);
+                            composites.push(composite);
                         }
                     });
                     composites.push((variant.ident.to_string(), composite_name));
@@ -74,11 +74,11 @@ pub fn inner(model: TokenStream) -> TokenStream {
 
     let result = quote::quote! {
         impl ::platt::db_types::HasDbType for #enum_name {
-            fn composites() -> ::std::collections::HashSet<::platt::db_types::Composite> {
+            fn composites() -> ::std::vec::Vec<::platt::db_types::Composite> {
                 #req_composites
                 {
                     #enum_composite
-                    composites.insert(composite);
+                    composites.push(composite);
                 }
                 composites
             }

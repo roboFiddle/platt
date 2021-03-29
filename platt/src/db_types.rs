@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct DbType {
     pub base: String,
@@ -30,8 +28,8 @@ pub struct Composite {
 }
 
 pub trait HasDbType {
-    fn composites() -> HashSet<Composite> {
-        HashSet::new()
+    fn composites() -> Vec<Composite> {
+        Vec::new()
     }
     fn db_type() -> DbType;
 }
@@ -179,7 +177,7 @@ pub mod json {
 }
 
 impl<T: HasDbType> HasDbType for Option<T> {
-    fn composites() -> HashSet<Composite> {
+    fn composites() -> Vec<Composite> {
         T::composites()
     }
     fn db_type() -> DbType {
@@ -190,7 +188,7 @@ impl<T: HasDbType> HasDbType for Option<T> {
 }
 
 impl<T: HasDbType> HasDbType for Vec<T> {
-    fn composites() -> HashSet<Composite> {
+    fn composites() -> Vec<Composite> {
         T::composites()
     }
     fn db_type() -> DbType {
@@ -201,7 +199,7 @@ impl<T: HasDbType> HasDbType for Vec<T> {
 }
 
 impl<T: HasDbType, const N: usize> HasDbType for [T; N] {
-    fn composites() -> HashSet<Composite> {
+    fn composites() -> Vec<Composite> {
         T::composites()
     }
     fn db_type() -> DbType {

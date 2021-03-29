@@ -12,7 +12,7 @@ struct PlattField {
 
 pub fn inner(model: TokenStream) -> TokenStream {
     let model = parse_macro_input!(model as DeriveInput);
-    let mut req_composites = quote! { let mut composites = ::std::collections::HashSet::new();  };
+    let mut req_composites = quote! { let mut composites = ::std::vec::Vec::new();  };
     let mut fields = quote!{ let mut fields = ::std::vec::Vec::new(); };
 
     if model.generics.lt_token.is_some() {
