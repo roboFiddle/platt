@@ -1,0 +1,2 @@
+[workspace]
+members = ["platt", "platt_macros", "platt_example"]

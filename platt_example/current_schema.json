@@ -1,0 +1,32 @@
+{
+  "enums": [],
+  "domains": [],
+  "composites": [],
+  "tables": [
+    {
+      "name": "BlogPost",
+      "columns": [
+        {
+          "name": "name",
+          "db_type": {
+            "base": "TEXT",
+            "nullable": false,
+            "indexed": false,
+            "primary_key": false,
+            "unique": false
+          }
+        },
+        {
+          "name": "content",
+          "db_type": {
+            "base": "TEXT",
+            "nullable": false,
+            "indexed": false,
+            "primary_key": false,
+            "unique": false
+          }
+        }
+      ]
+    }
+  ]
+}

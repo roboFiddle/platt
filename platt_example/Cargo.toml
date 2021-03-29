@@ -1,0 +1,14 @@
+[package]
+name = "platt_example"
+version = "0.1.0"
+authors = ["Alex Weiss <alex.m.weiss2@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+platt = { version = "*", path = "../platt" }
+
+[[bin]]
+name = "manage"
+path = "src/manage.rs"
