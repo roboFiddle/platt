@@ -8,10 +8,20 @@ pub enum BlogPostStatus {
 }
 
 #[derive(PlattModel)]
-pub struct BlogPost {
-    name: String,
-    content: platt::db_types::Varchar<255>,
-    status: BlogPostStatus
+#[platt(not_clonable)]
+pub struct User {
+    email: String,
+    password: String
 }
 
-platt::activate_models!(BlogPost);
+#[derive(PlattModel)]
+#[platt(not_clonable)]
+pub struct BlogPost {
+    name: String,
+    content: platt::schema::Varchar<255>,
+    status: BlogPostStatus,
+    #[platt(reverse = "User")]
+    posted_by: platt::schema::ForeignKey<User>
+}
+
+platt::activate_models!(User, BlogPost);

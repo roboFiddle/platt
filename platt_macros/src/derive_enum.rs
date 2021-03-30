@@ -23,15 +23,15 @@ pub fn inner(model: TokenStream) -> TokenStream {
             syn::Fields::Named(ref fields) => {
                 if fields.named.len() > 0 {
                     let composite_name = format!("{}_{}", enum_name, variant.ident);
-                    let mut composite = quote! { let mut composite = ::platt::db_types::Composite { name: #composite_name.to_string(), fields: Vec::new() }; };
+                    let mut composite = quote! { let mut composite = ::platt::schema::Composite { name: #composite_name.to_string(), fields: Vec::new() }; };
                     for p_field in variant.fields.iter() {
                         let column_name = format!("{}", p_field.ident.as_ref().unwrap());
                         match &p_field.ty {
                             // syn::Type::Array(ty_array) =>  { }
                             syn::Type::Path(ty_path) =>  { 
-                                req_composites.extend(quote! { composites.extend(<#ty_path as ::platt::db_types::HasDbType>::composites()); });
+                                req_composites.extend(quote! { composites.extend(<#ty_path as ::platt::schema::HasDbType>::composites()); });
                                 composite.extend(quote!{
-                                    composite.fields.push( (#column_name.to_string(), <#ty_path as ::platt::db_types::HasDbType>::db_type()) );
+                                    composite.fields.push( (#column_name.to_string(), <#ty_path as ::platt::schema::HasDbType>::db_type()) );
                                 })
                             }
                             _ => panic!("Platt models can only contain type paths.")
@@ -54,14 +54,14 @@ pub fn inner(model: TokenStream) -> TokenStream {
     let enum_name_str = enum_name.to_string();
     let enum_composite_name = format!("{}__Composite", enum_name);
     let mut enum_composite = quote! { 
-        let mut composite = ::platt::db_types::Composite { 
+        let mut composite = ::platt::schema::Composite { 
             name: #enum_composite_name.to_string(), 
-            fields: vec![(#enum_name_str.to_string(), <u32 as ::platt::db_types::HasDbType>::db_type())]
+            fields: vec![(#enum_name_str.to_string(), <u32 as ::platt::schema::HasDbType>::db_type())]
         }; 
     };
     for (variant_name, composite_name) in composites {
         enum_composite.extend(quote![
-            composite.fields.push( (#variant_name.to_string(), ::platt::db_types::DbType {
+            composite.fields.push( (#variant_name.to_string(), ::platt::schema::DbType {
                 base: #composite_name.to_string(),
                 nullable: false,
                 indexed: false,
@@ -73,8 +73,8 @@ pub fn inner(model: TokenStream) -> TokenStream {
     }
 
     let result = quote::quote! {
-        impl ::platt::db_types::HasDbType for #enum_name {
-            fn composites() -> ::std::vec::Vec<::platt::db_types::Composite> {
+        impl ::platt::schema::HasDbType for #enum_name {
+            fn composites() -> ::std::vec::Vec<::platt::schema::Composite> {
                 #req_composites
                 {
                     #enum_composite
@@ -82,8 +82,8 @@ pub fn inner(model: TokenStream) -> TokenStream {
                 }
                 composites
             }
-            fn db_type() -> ::platt::db_types::DbType {
-                ::platt::db_types::DbType {
+            fn db_type() -> ::platt::schema::DbType {
+                ::platt::schema::DbType {
                     base: #enum_composite_name.to_string(),
                     nullable: false,
                     indexed: false,

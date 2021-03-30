@@ -7,15 +7,15 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [features]
 chrono_type = ["chrono"]
-uuid_type = ["uuid"]
+uuid_type = []
 json = []
 
 [dependencies]
 derive_builder = "0.9"
-derive-getters = "0.2.0"
+futures = "*"
 platt_macros = { version = "0.1", path = "../platt_macros" }
 chrono = { version = "*", optional = true }
-uuid = { version = "*", optional = true }
+uuid = { version = "*" }
 serde = { version = "*", features = ["derive"] }
 serde_json = { version = "*" }
 treediff = { version = "4", features = ["with-serde-json"] }
